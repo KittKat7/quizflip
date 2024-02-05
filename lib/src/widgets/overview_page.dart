@@ -41,7 +41,7 @@ class OverviewPage extends StatelessWidget {
 
     /// The [ListView] to be displayed [drawer].
     ListView drawerList = ListView(children: [
-      Text(getLang('hdr_settings_drawer')),
+      Text(getLang('hdr_settings_drawer', [version])),
       ElevatedButton(
         onPressed: () => cycleThemeColor(),
         child: Text(getLang('btn_theme_color_menu'))),
