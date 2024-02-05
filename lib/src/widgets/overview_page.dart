@@ -5,6 +5,7 @@ import 'package:kkfl_lang/kkfl_lang.dart';
 import 'package:kkfl_routing/kkfl_routing.dart';
 import 'package:kkfl_widgets/kkfl_widgets.dart';
 import 'package:quizflip/src/app_data.dart';
+import 'package:quizflip/src/flashcard.dart';
 import 'package:quizflip/src/system_io.dart';
 import 'package:quizflip/src/widgets/filter_buttons.dart';
 import 'package:quizflip/src/widgets/flashcard_page.dart';
@@ -40,12 +41,13 @@ class OverviewPage extends StatelessWidget {
 
     /// The [ListView] to be displayed [drawer].
     ListView drawerList = ListView(children: [
+      Text(getLang('hdr_settings_drawer')),
       ElevatedButton(
         onPressed: () => cycleThemeColor(),
         child: Text(getLang('btn_theme_color_menu'))),
       ElevatedButton(
         onPressed: () => cycleThemeMode(),
-        child: Text(getLang('btn_theme_brightness_menu'))),
+        child: Text(getLang('btn_theme_mode_menu'))),
       // TODO change from () {} to update state maybe?
       ElevatedButton(
         onPressed: () => importCardsJson(context, () {}),
@@ -74,6 +76,7 @@ class OverviewPage extends StatelessWidget {
     );
 
     FloatingActionButton actionButton = FloatingActionButton(
+      tooltip: getLang('tooltip_create_card'),
       onPressed: () => Navigator.push(context, genRoute(FlashcardPage())),
       child: const Icon(Icons.add),
       );
@@ -93,11 +96,14 @@ class OverviewPage extends StatelessWidget {
       canPop: false,
       onPopInvoked: (didPop) {
         if (didPop) return;
-        // TODO: handle popping filter.
+        if (CardList.filter.length > 0) {
+          CardList.popFilter();
+          return;
+        }//if
         // If no filter to pop, exit app.
         confirmPopup(
           context,
-          getLang('header_exit_app'),
+          getLang('hdr_exit_app'),
           getLang('msg_confirm_app_exit'),
           () => SystemChannels.platform.invokeMethod('SystemNavigator.pop')
         );

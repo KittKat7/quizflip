@@ -36,7 +36,7 @@ class _OverviewFlashcardButtonsState extends State<OverviewFlashcardButtons> {
       Widget flashcardBtn = LongPressWidget(
         onLongPress: () => confirmPopup(
           context,
-          getLang('header_delete_card'),
+          getLang('hdr_delete_card'),
           getLang('msg_confirm_delete_card', [c.id]),
           () => CardList.removeCard(c)),
         child: FlashcardButton(card: c, onPressed: () =>

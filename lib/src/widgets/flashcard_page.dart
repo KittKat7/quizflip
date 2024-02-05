@@ -142,7 +142,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
     if (isEdited) {
       confirmPopup(
         context,
-        getLang('header_confirm_discard_changes'),
+        getLang('hdr_confirm_discard_changes'),
         getLang('msg_confirm_discard_changes'),
         () => Navigator.pop(context));
     } else {
@@ -160,7 +160,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
     }//if
     confirmPopup(
       context,
-      getLang('header_delete_card'),
+      getLang('hdr_delete_card'),
       getLang('msg_confirm_delete_card', [widget.card!.id]),
       () { CardList.removeCard(widget.card!); Navigator.pop(context); });
   }//_actionDelete
@@ -201,7 +201,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
       if (CardList.containsCard(card)) {
         confirmPopup(
           context,
-          getLang('header_confirm_overwrite'),
+          getLang('hdr_confirm_overwrite'),
           getLang('msg_confirm_overwrite'),
           () { _saveCard(card); Navigator.pop(context); });
           return;

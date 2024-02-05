@@ -3,23 +3,14 @@ Map<String, String> get getLangMap {
 	lang['title'] = 'QuizFlip';
 
   // page titles
-  lang['settingsPage'] = 'Settings';
-  lang['reviewPage'] = 'Review - \${0}';
-  lang['reviewCompletePage'] = 'Review Complete';
-  lang['practicePage'] = 'Practice - \${0} Cards Practiced';
-  lang['multichoicePage'] = 'MultiChoice Test';
-  lang['multichoiceResultPage'] = 'MultiChoice Results';
+  lang['page_practice'] = 'Practice - \${0} Cards Practiced';
 
   // generic
-  lang['confirm'] = 'Confirm';
-  lang['cancel'] = 'Cancel';
   lang['close'] = 'Close';
   lang['save'] = 'Save';
   lang['edit'] = 'Edit';
   lang['preview'] = 'Preview';
   lang['flashcard'] = 'Flashcard';
-  lang['skip'] = 'Skip';
-  lang['overwrite'] = 'Overwrite';
   lang['delete'] = 'Delete';
 
   // btns
@@ -27,30 +18,28 @@ Map<String, String> get getLangMap {
   lang['btn_practice'] = 'Practice';
   lang['btn_review'] = 'Review';
   lang['btn_multitest'] = 'Multi-Choice';
-  lang['btn_light_theme'] = 'Light Theme';
-  lang['btn_dark_theme'] = 'Dark Theme';
-  lang['btn_auto_theme'] = 'System Theme';
-  lang['btn_theme_brightness_menu'] = 'Change Theme';
+  lang['btn_theme_light'] = 'Light Theme';
+  lang['btn_theme_dark'] = 'Dark Theme';
+  lang['btn_theme_system'] = 'System Theme';
+  lang['btn_theme_mode_menu'] = 'Change Theme Mode';
   lang['btn_theme_color_menu'] = 'Select Theme Color';
   lang['btn_export_json'] = 'Export JSON';
   lang['btn_import_json'] = 'Import JSON';
-  lang['bnt_apply_to_all'] = 'Apply to all?';
 
   // tooltip
   lang['tooltip_create_card'] = 'Create card';
 
   // heading
-  lang['header_create_new_card'] = 'Create New Card';
-  lang['header_delete_card'] = 'Delete Flashcard';
-  lang['header_exit_app'] = 'Exit ${lang['title']}';
-  lang['header_settings_drawer'] = 'QuizFlip - \${0}';
-  lang['header_finish_test'] = 'Finish Test?';
-  lang['header_finish_review'] = 'Finish Review?';
-  lang['header_confirm_modify_card'] = 'Confirm Modification?';
-  lang['header_confirm_cancel_modify'] = 'Confirm Cancel?';
-  lang['header_confirm_overwrite'] = 'Overwrite Existing Card?';
-  lang['header_confirm_leave_practice'] = 'Stop Practicing?';
-  lang['header_confirm_discard_changes'] = 'Discard Changes?';
+  lang['hdr_delete_card'] = 'Delete Flashcard';
+  lang['hdr_exit_app'] = 'Exit ${lang['title']}';
+  lang['hdr_settings_drawer'] = 'QuizFlip - \${0}';
+  lang['hdr_finish_test'] = 'Finish Test?';
+  lang['hdr_finish_review'] = 'Finish Review?';
+  lang['hdr_confirm_modify_card'] = 'Confirm Modification?';
+  lang['hdr_confirm_cancel_modify'] = 'Confirm Cancel?';
+  lang['hdr_confirm_overwrite'] = 'Overwrite Existing Card?';
+  lang['hdr_confirm_leave_practice'] = 'Stop Practicing?';
+  lang['hdr_confirm_discard_changes'] = 'Discard Changes?';
 
   // msg
   lang['msg_confirm_delete_card'] = 'The card \'\${0}\' will be deleted, continue?';

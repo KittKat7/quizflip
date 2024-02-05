@@ -34,7 +34,7 @@ class _PracticePageState extends State<PracticePage> {
     Center center = Center(child: aspect); // TODO
     /// The app bar to be displayed at the top of the screen. Has a centered title.
     AppBar appBar = AppBar(
-      title: Marked(getLang('practicePage', [practice.cardsPracticed])),
+      title: Marked(getLang('page_practice', [practice.cardsPracticed])),
       centerTitle: true,
     );
 
@@ -75,7 +75,7 @@ class _PracticePageState extends State<PracticePage> {
         if (didPop) return;
         confirmPopup(
           context,
-          getLang('header_confirm_leave_practice'),
+          getLang('hdr_confirm_leave_practice'),
           getLang('msg_confirm_leave_practice'),
           () => Navigator.pop(context));
       },
