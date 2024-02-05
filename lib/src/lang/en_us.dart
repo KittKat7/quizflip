@@ -32,8 +32,8 @@ Map<String, String> get getLangMap {
   lang['btn_auto_theme'] = 'System Theme';
   lang['btn_theme_brightness_menu'] = 'Change Theme';
   lang['btn_theme_color_menu'] = 'Select Theme Color';
-  lang['btn_export_json'] = 'Export Json';
-  lang['btn_import_json'] = 'Import Json';
+  lang['btn_export_json'] = 'Export JSON';
+  lang['btn_import_json'] = 'Import JSON';
   lang['bnt_apply_to_all'] = 'Apply to all?';
 
   // tooltip
