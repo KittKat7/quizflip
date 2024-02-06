@@ -111,17 +111,37 @@ class _FlashcardPageState extends State<FlashcardPage> {
       }//for
       tagsField = Marked(widget.cardTags);
     } else {
-      keyField = TextField(controller: TextEditingController(text: key), onChanged: _updateKey,);
-      deckField = TextField(controller: TextEditingController(text: deck), onChanged: _updateDeck,);
+      keyField = TextField(
+        controller: TextEditingController(text: key),
+        onChanged: _updateKey,
+        keyboardType: TextInputType.multiline,
+        maxLines: null,);
+
+      deckField = TextField(
+        controller: TextEditingController(text: deck),
+        onChanged: _updateDeck,
+        keyboardType: TextInputType.multiline,
+        maxLines: null,);
+
       valueField = TextField(
         controller: TextEditingController(text: values[0]),
-        onChanged: (v) => _updateValue(v, 0),);
+        onChanged: (v) => _updateValue(v, 0),
+        keyboardType: TextInputType.multiline,
+        maxLines: null,);
+
       for (int i = 1; i < values.length; i++) {
         valuesFakeField.add(TextField(
           controller: TextEditingController(text: values[i]),
-          onChanged: (v) => _updateValue(v, i),));
+          onChanged: (v) => _updateValue(v, i),
+          keyboardType: TextInputType.multiline,
+          maxLines: null,));
       }//for
-      tagsField = TextField(controller: TextEditingController(text: tags), onChanged: _updateTags,);
+
+      tagsField = TextField(
+        controller: TextEditingController(text: tags),
+        onChanged: _updateTags,
+        keyboardType: TextInputType.multiline,
+        maxLines: null,);
     }//if/elif
   }//toggleEditingWidgets
 
@@ -235,10 +255,6 @@ class _FlashcardPageState extends State<FlashcardPage> {
       const Divider(),
       keyField,
       const SizedBox(height: 20),
-      hdrDeck,
-      const Divider(),
-      deckField,
-      const SizedBox(height: 20),
       hdrValue,
       const Divider(),
       valueField,
@@ -254,6 +270,10 @@ class _FlashcardPageState extends State<FlashcardPage> {
     }//if
 
     children.addAll([
+      hdrDeck,
+      const Divider(),
+      deckField,
+      const SizedBox(height: 20),
       hdrTags,
       const Divider(),
       tagsField
