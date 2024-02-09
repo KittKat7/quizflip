@@ -39,8 +39,10 @@ class _OverviewFlashcardButtonsState extends State<OverviewFlashcardButtons> {
           getLang('hdr_delete_card'),
           getLang('msg_confirm_delete_card', [c.id]),
           () => CardList.removeCard(c)),
-        child: FlashcardButton(card: c, onPressed: () =>
-          Navigator.push(context, genRoute(FlashcardPage(card: c))),));
+        child: FlashcardButton(
+          card: c,
+          onPressed: () => Navigator.push(context, genRoute(FlashcardPage(card: c))),
+          state: FlashcardButtonState.all,));
       children.add(Padding(padding: const EdgeInsets.only(bottom: 5), child: flashcardBtn));
     }//for
     Column column = Column(children: children,);

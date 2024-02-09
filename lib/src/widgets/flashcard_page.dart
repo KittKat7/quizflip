@@ -197,19 +197,19 @@ class _FlashcardPageState extends State<FlashcardPage> {
     // Validation for fields.
     // If the key is empty, alert the user, and return.
     if (card.key.isEmpty) {
-      confirmPopup(context, "TODO", "TODO KEY EMPTY", (){});
+      confirmPopup(context, getLang('hdr_create_card_error'), getLang('msg_create_card_error_key_empty'), (){});
       return;
     }
 
     // If the deck is empty, alert the user, and return.
     if (card.deck.toString().replaceAll('/', '').isEmpty) {
-      confirmPopup(context, "TODO", "TODO DECK EMPTY", (){});
+      confirmPopup(context, getLang('hdr_create_card_error'), getLang('msg_create_card_error_deck_empty'), (){});
       return;
     }
 
     // If the value is empty, alert the user, and return.
     if (card.value.isEmpty) {
-      confirmPopup(context, "TODO", "TODO VALUE EMPTY", (){});
+      confirmPopup(context, getLang('hdr_create_card_error'), getLang('msg_create_card_error_value_empty'), (){});
       return;
     }
 

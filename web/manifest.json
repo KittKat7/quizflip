@@ -1,6 +1,6 @@
 {
-    "name": "quizflip",
-    "short_name": "quizflip",
+    "name": "QuizFlip",
+    "short_name": "QuizFlip",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#000000",

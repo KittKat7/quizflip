@@ -26,7 +26,7 @@ class OverviewPage extends StatelessWidget {
     /// card buttons. These represent the cards inside the current filter.
     Column column = const Column(children: [
       Padding(padding: EdgeInsets.only(bottom: 5), child: PracticeButtons()),
-      Padding(padding: EdgeInsets.only(bottom: 5), child:DeckButtons()),
+      Padding(padding: EdgeInsets.only(bottom: 5), child: DeckButtons()),
       // deckBtns(Flashcard.filteredDecks, () => setState(() {})),
       // CardButtonColumn(cards: Flashcard.filteredCards, updateState: () => setState(() {})),
       // cardBtns(Flashcard.filteredCards, context, () => setState(() {})),
@@ -48,7 +48,6 @@ class OverviewPage extends StatelessWidget {
       ElevatedButton(
         onPressed: () => cycleThemeMode(),
         child: Text(getLang('btn_theme_mode_menu'))),
-      // TODO change from () {} to update state maybe?
       ElevatedButton(
         onPressed: () => importCardsJson(context, () {}),
         child: Text(getLang('btn_import_json')),),
@@ -85,7 +84,7 @@ class OverviewPage extends StatelessWidget {
     Scaffold scaffold = Scaffold(
       appBar: appBar,
       drawer: drawer,
-      body: aspect,// TODO,
+      body: aspect,
       floatingActionButton: actionButton,
     );//scaffold
 

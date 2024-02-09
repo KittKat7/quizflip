@@ -3,6 +3,7 @@ import 'package:kkfl_lang/kkfl_lang.dart';
 import 'package:kkfl_routing/kkfl_routing.dart';
 import 'package:kkfl_widgets/kkfl_widgets.dart';
 import 'package:quizflip/src/widgets/practice_page.dart';
+import 'package:quizflip/src/widgets/review_page.dart';
 
 /// [PracticeButtons] class. A set of buttons used by the user to start the different practice modes.
 class PracticeButtons extends StatelessWidget {
@@ -15,7 +16,13 @@ class PracticeButtons extends StatelessWidget {
     ElevatedButton practiceButton = ElevatedButton(
       onPressed: () => Navigator.push(context, genRoute(const PracticePage())),
       child: Marked(getLang('btn_practice')));
-    return practiceButton; // TODO
+    
+    /// reviewButton This button is used to switch the user into the review mode.
+    ElevatedButton reviewButton = ElevatedButton(
+      onPressed: () => Navigator.push(context, genRoute(const ReviewPage())),
+      child: Marked(getLang('btn_review')));
+
+    return Wrap(children: [practiceButton, reviewButton]);
   }//build
   
 }//PracticeButtons

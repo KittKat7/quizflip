@@ -30,8 +30,12 @@ class _PracticePageState extends State<PracticePage> {
 
     /// The aspect holds the main app components and keeps a specified aspect ratio.
     Aspect aspect = Aspect(child: SingleChildScrollView(
-      child: FlashcardButton(card: practice.currentCard, isFlipped: practice.isShowingValue, onPressed: () { practice.flipCard(); setState((){}); },)));
-    Center center = Center(child: aspect); // TODO
+      child: FlashcardButton(
+        card: practice.currentCard,
+        state: practice.isShowingValue? FlashcardButtonState.back : FlashcardButtonState.front,
+        onPressed: () { practice.flipCard(); setState((){}); },)));
+    Center center = Center(child: aspect);
+    
     /// The app bar to be displayed at the top of the screen. Has a centered title.
     AppBar appBar = AppBar(
       title: Marked(getLang('page_practice', [practice.cardsPracticed])),
@@ -58,9 +62,9 @@ class _PracticePageState extends State<PracticePage> {
         Expanded(child: resetConfidence(IconButton(
           onPressed: () { practice.setConfidence(2); setState((){}); },
           icon: Icon(practice.confidence == 2? Icons.add_circle: Icons.add_circle_outline)),)),
-        Expanded(child: resetConfidence(IconButton(
+        Expanded(child: IconButton(
           onPressed: () { practice.nextCard(); setState((){}); },
-          icon: const Icon(Icons.arrow_forward_rounded)))),
+          icon: const Icon(Icons.arrow_forward_rounded))),
       ]),
     );//bottomAppBar
 

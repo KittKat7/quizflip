@@ -4,17 +4,25 @@ import 'package:kkfl_theming/kkfl_theming.dart';
 import 'package:kkfl_widgets/kkfl_widgets.dart';
 import 'package:quizflip/src/flashcard.dart';
 
+enum FlashcardButtonState {
+  front,
+  back,
+  all
+}
+
 class FlashcardButton extends StatelessWidget {
 
   final Flashcard card;
   final void Function()? onPressed;
+  final FlashcardButtonState state;
   final bool isFlipped;
 
   const FlashcardButton({
     super.key,
     required this.card,
-    this.isFlipped = false,
-    required this.onPressed});
+    required this.state,
+    required this.onPressed
+    }) : isFlipped = state == FlashcardButtonState.back;
 
   @override
   Widget build(BuildContext context) {
@@ -24,23 +32,29 @@ class FlashcardButton extends StatelessWidget {
       deckTags = '$deckTags ${card.tags}';
     }
 
-    late Widget buttonChild = Column(children: [
-      Marked(isFlipped? card.value : card.key),
-      SimpleText(deckTags, isItalic: true,)]);
-    // if (isFlipped) {
-    //   buttonChild = 
-    // } else {
-    //   String deckTags = widget.card.deck;
-    //   if (widget.card.tags.isNotEmpty) {
-    //     deckTags = '$deckTags ${widget.card.tags}';
-    //   }
-    //   buttonChild = Column(children: [Marked(widget.card.key), SimpleText(deckTags, isItalic: true,)]);
-    // }
+    List<Widget> children = [];
 
-    OutlinedButton button = OutlinedButton(
-      style: OutlinedButton.styleFrom(
-        backgroundColor: isFlipped? colorScheme(context).primaryContainer
-          : colorScheme(context).surface,
+    if (state == FlashcardButtonState.front) {
+      children.addAll([
+        Marked(card.key),
+        SimpleText(deckTags, isItalic: true,)]);
+    } else if (state == FlashcardButtonState.back) {
+      children.addAll([
+        Marked(card.value),
+        SimpleText(deckTags, isItalic: true,)]);
+    } else {
+      children.addAll([
+        Marked(card.key),
+        const Divider(),
+        Marked(card.value),
+        SimpleText(deckTags, isItalic: true,)]);
+    }
+
+    Widget buttonChild = Column(children: children);
+
+    ElevatedButton button = ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: isFlipped? colorScheme(context).primaryContainer : null,
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5)))
       ),
       onPressed: onPressed,
