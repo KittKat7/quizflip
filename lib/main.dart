@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kkfl_lang/kkfl_lang.dart';
 import 'package:kkfl_theming/kkfl_theming.dart';
 import 'package:kkfl_widgets/kkfl_widgets.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:quizflip/src/app_data.dart';
 import 'package:quizflip/src/flashcard.dart';
 import 'package:quizflip/src/persistant.dart';
@@ -22,6 +23,10 @@ Future<void> initialize() async {
 
   // Wait for shared preferences to load.
   await initializePrefs();
+
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+  appVersion = "${packageInfo.version}+${packageInfo.buildNumber}";
 
   // Set language.
   setLangMap(en_us.getLangMap);
@@ -74,7 +79,7 @@ class QuizFlip extends StatelessWidget {
   Widget build(BuildContext context) {
     
     return MaterialApp(
-      title: getLang('title'),
+      title: "${getLang('title')} $appVersion",
       theme: theme.getThemeDataLight(context),
       darkTheme: theme.getThemeDataDark(context),
       themeMode: theme.getThemeMode(context),

@@ -8,7 +8,7 @@ import 'package:quizflip/src/update.dart';
 /// Saves the cards to shared preferences
 void saveCards() {
   prefs.setString('flashcards', json.encode({
-    'metadata': {'version': version},
+    'metadata': {'version': dataVersion},
     'flashcards': CardList.cards,
     }));
 }//_saveCards
@@ -19,7 +19,7 @@ List<Flashcard> loadFlashcards() {
 
   Map<String, dynamic> metadata = json.decode(jsonContent)['metadata'];
   // TODO version check
-  if (metadata['version'] < version) {
+  if (metadata['version'] < dataVersion) {
     updateFlashcards(metadata['version']);
   }
   List<dynamic> cardsJson = json.decode(jsonContent)['flashcards'];

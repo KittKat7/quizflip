@@ -15,7 +15,7 @@ import 'widgets/overwrite_popup.dart';
 Future<void> exportCardsJson() async {
 
   Map<String, dynamic> metadata = {
-    'version': version
+    'version': dataVersion
   };
 
   // This is what will be writen to the file. Encode the metadata and cards into a map into json.
@@ -80,7 +80,7 @@ Future<void> importCardsJson(context, Function() onLoadComplete) async {
   Map<String, dynamic> metadata = content['metadata'];
 
   // Check to see if imported JSON is up to date with current app formatting.
-  if (metadata['version'] < version) {
+  if (metadata['version'] < dataVersion) {
     
   }//e if version is out of date
 

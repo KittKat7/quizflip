@@ -5,8 +5,10 @@ import 'package:kkfl_theming/kkfl_theming.dart';
 
 import './pref_storage.dart';
 
-int version = 202401251632;
-String varVersion = 'version';
+String appVersion = "";
+
+int dataVersion = 202401251632;
+String varDataVersion = 'version';
 String varTheme = 'theme';
 String varDarkMode = 'darkMode';
 
@@ -26,7 +28,7 @@ Map<String, dynamic> _appData = {};
 /// `theme` Is any basic color RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE, or a custom theme name.\
 /// `darkMode` Is either FALSE, TRUE, or SYSTEM.\
 final Map<String, dynamic> _defaultAppData = {
-  varVersion   : version,
+  varDataVersion   : dataVersion,
   varTheme     : 'RED',
   varDarkMode  : 'SYSTEM',
 };
@@ -48,7 +50,7 @@ void loadAppData() {
   // Try to load all the data into _appData. If an exception is thrown, use the default app data.
   try {
     _appData = {
-      varVersion   : appData[varVersion]   ?? _defaultAppData[varVersion],
+      varDataVersion   : appData[varDataVersion]   ?? _defaultAppData[varDataVersion],
       varTheme     : appData[varTheme]     ?? _defaultAppData[varTheme],
       varDarkMode  : appData[varDarkMode]  ?? _defaultAppData[varDarkMode],
     };
