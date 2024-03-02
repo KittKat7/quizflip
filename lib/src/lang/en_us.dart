@@ -26,6 +26,9 @@ Map<String, String> get getLangMap {
   lang['btn_theme_color_menu'] = 'Select Theme Color';
   lang['btn_export_json'] = 'Export JSON';
   lang['btn_import_json'] = 'Import JSON';
+  lang['btn_overwrite'] = 'Overwrite';
+  lang['btn_skip'] = 'Skip';
+  lang['btn_apply_to_all'] = 'Apply to all';
 
   // tooltip
   lang['tooltip_create_card'] = 'Create card';

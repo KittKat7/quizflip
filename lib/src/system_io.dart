@@ -6,6 +6,8 @@ import 'package:quizflip/src/persistant.dart';
 import 'package:quizflip/src/system_io_web.dart';
 import 'package:kkfl_platform/kkfl_platform.dart';
 
+import 'widgets/overwrite_popup.dart';
+
 /// Export [cards] to JSON format and save it to the device.
 /// 
 /// Takes [cards] and [metadata] and converts it to JSON as a String. Determines which platform the
@@ -92,36 +94,30 @@ Future<void> importCardsJson(context, Function() onLoadComplete) async {
 
   // Default is null, but if this is set by the user during a card conflict, this will store the
   // decision, and it will be applied to all future conflicts during this import operation.
-  bool? overwriteAll;
+  bool applyToAll = false;
+  bool overwrite = false;
   // For every Flashcard in [flashcards] check to see if there is a conflict, if [overwriteAll] is
   // set, follow that, otherwise prompt the user as to whether to overwrite or not. If there is no
   // conflict, or the user decides to overwrite, add the Flashcard to the list of cards in the app.
   for (Flashcard card in flashcards) {
 
-    // If [card] allready exists, and overwrite all is NOT true, determine whether to overwrite.
-    // Else if overwrite all is true, remove the stored card, then add the new one.
-    if (CardList.containsCard(card) && overwriteAll != true) {
-      // If overwriteAll is set to false, skip over adding and move on to the next card.
-      if (overwriteAll == false) continue;
+    // alreadyExists tells whether this card is already contained. Used to save processing power
+    // from rechecking.
+    bool alreadyExists = CardList.containsCard(card);
 
-      // A temp variable to check whether to apply overwrite to all future conflicts.
-      bool applyToAll = true;
-      // Whether this card should overwrite.
-      // bool overwriteThis = await overwriteConfirmAlertPopup(context, (a) => applyToAll = a, card.id);
-      bool overwriteThis = false;
-      // If applyToAll is true, overwriteAll will be updated to match which ever choice is selected
-      // for this card.
-      if (applyToAll) overwriteAll = overwriteThis;
-      // If NOT overwriteThis, continue and skip overwriting. Otherwise, remove the original card
-      // before adding the new one.
-      if (!overwriteThis) {
-        continue;
-      } //else { // TODO
-      //   CardList.removeCard(card);
-      // }//e if else
-    } else if (overwriteAll == true) {
+    // If the card already exists, and applyToAll is not true, determine whether to overwrite the
+    // existing card. Also updates applyToAll.
+    if (alreadyExists && !applyToAll) {
+      overwrite = await overwriteConfirmAlertPopup(context, (b) => applyToAll = b, card.id);      
+    }//if
+
+    // If the card exists, and not overwrite, skip this card and continue the loop.
+    if (alreadyExists && !overwrite) {
+      continue;
+    } else if (alreadyExists && overwrite) {
       CardList.removeCard(card);
-    }//e if else if
+    }
+
     CardList.addCard(card);
   }//e for
   
