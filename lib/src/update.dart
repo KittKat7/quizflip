@@ -1,4 +1,0 @@
-
-void updateFlashcards(int oldVersion) {
-  
-}
