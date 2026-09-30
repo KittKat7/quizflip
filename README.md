@@ -1,6 +1,6 @@
 # quizflip
 
-A new Flutter project.
+A flashcard app?
 
 ## Getting Started
 
