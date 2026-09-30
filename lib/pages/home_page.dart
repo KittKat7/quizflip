@@ -29,9 +29,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
 
-    List<String> tags = list.getFilteredTags();
+    List<String> tags = list.getFilteredNextTags();
     List<Widget> tagButtons = [
-      // TODO Make this go up a level instead of just reseting the tag filter
       IconButton(
         onPressed: () => setState(() => list.popFilter() ),
         icon: Icon(Icons.arrow_upward_rounded))
@@ -52,8 +51,8 @@ class _HomePageState extends State<HomePage> {
         padding: EdgeInsetsGeometry.all(1),
         child: TextButton(child: Text(t),
         onPressed: () => setState(() {
-          list = list.filterList(t);
-          tags = list.getFilteredTags();
+          list.pushFilter(t);
+          tags = list.getFilteredNextTags();
         }),)
       ));
     }

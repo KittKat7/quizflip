@@ -54,6 +54,23 @@ class CardList {
     return tags;
   }
 
+  /// Returns a list of all possible next-level tags in the filtering hierarchy
+  List<String> getFilteredNextTags() {
+    List<String> nextTags = [];
+    List<String> filteredTags = getFilteredTags();
+    int fl = _filter.length;
+    for (String ft in filteredTags) {
+      String nt = ft.substring(fl);
+      if (nt.startsWith('/')) nt = nt.substring(1);
+      if (nt.contains('/')) {
+        nt = nt.substring(0, nt.indexOf('/'));
+      }
+      if (nextTags.contains(nt) || nt.isEmpty) continue;
+      nextTags.add(nt);
+    }
+    return nextTags;
+  }
+
   List<Flashcard> getAllCards() {
     return _cards.toList();
   }
@@ -139,6 +156,18 @@ class CardList {
     return this;
   }
 
+  /// Adds a new filtering level by appending a tag to the current filter string.
+  void pushFilter(String next) {
+    List<String> stack = [];
+    if (_filter.isNotEmpty) {
+      stack = _filter.split('/');
+    }
+    stack.add(next);
+    _filter = stack.join('/');
+    filterList(_filter);
+  }
+
+  /// Removes the last level of filtering from the current filter
   void popFilter() {
     List<String> stack = _filter.split('/');
     stack.removeLast();
