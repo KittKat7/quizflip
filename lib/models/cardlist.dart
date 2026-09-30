@@ -158,13 +158,11 @@ class CardList {
 
   /// Adds a new filtering level by appending a tag to the current filter string.
   void pushFilter(String next) {
-    List<String> stack = [];
-    if (_filter.isNotEmpty) {
-      stack = _filter.split('/');
+    if (_filter.isEmpty) {
+      filterList(next);
+    } else {
+      filterList('$_filter/$next');
     }
-    stack.add(next);
-    _filter = stack.join('/');
-    filterList(_filter);
   }
 
   /// Removes the last level of filtering from the current filter
