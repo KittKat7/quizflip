@@ -63,7 +63,9 @@ class Flashcard {
       t = t.trim();
       if (t.isEmpty) continue;
       t = '#$t';
-      if (!tags.contains(t)) tags.add(FlashcardTag(tagStr: t));
+      if (!tags.contains(FlashcardTag(tagStr: t))) {
+        tags.add(FlashcardTag(tagStr: t));
+      }
     }
 
     // Return the flashcard
@@ -71,7 +73,7 @@ class Flashcard {
   }
 
   List<String> toCSV() {
-    return [term, definition, tags.join()];
+    return [term, definition, [for (FlashcardTag t in tags) t.tagStr].join()];
   }
 
   @override
