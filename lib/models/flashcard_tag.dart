@@ -55,7 +55,7 @@ class FlashcardTag {
   }
 
   /// Returns a new tag with the last subtag popped.
-  FlashcardTag? popTag() {
+  FlashcardTag? popSubtag() {
     if (!_tagStr.contains(_separator)) return null;
     List<String> tagBits = _tagStr.split(_separator);
     tagBits.removeLast();
@@ -64,7 +64,7 @@ class FlashcardTag {
   }
 
   /// Returns a new tag with the new subtag added.
-  FlashcardTag pushTag(String subtagStr) {
+  FlashcardTag pushSubtag(String subtagStr) {
     return FlashcardTag(tagStr: _tagStr + _separator + subtagStr);
   }
 
@@ -77,4 +77,10 @@ class FlashcardTag {
   @override
   int get hashCode => _tagStr.hashCode;
 
+}
+
+class FlashcardTagFilter {
+  FlashcardTag? _filter;
+  FlashcardTagFilter({required FlashcardTag? filter}) : _filter = filter;
+  // TODO
 }
