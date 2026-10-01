@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
 
     // Create button variables
     var deleteFilteredButton = Expanded(child: ElevatedButton(
-      onPressed: () => 
+      onPressed: () =>
         showConfirmPopup(
           context,
           getLang('msgTitleConfirmDeleteAllFilter'),
@@ -78,12 +78,12 @@ class _HomePageState extends State<HomePage> {
       onPressed: () {
         importFromCSV().then(
           (v) => setState((){}));
-      }, // TODO
+      },
       child: Text(getLang('btnImport'))));
     var exportButton = Expanded(child: ElevatedButton(
       onPressed: (){
         exportToCSV();
-      }, // TODO
+      },
       child: Text(getLang('btnExport'))));
     var addCardButton = Expanded(child: ElevatedButton(
       onPressed: (){},
