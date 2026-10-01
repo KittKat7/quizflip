@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'flashcard.dart';
+import 'flashcard_tag.dart';
 
 /// A list of flashcards
 class CardList {
@@ -9,10 +10,10 @@ class CardList {
   /// The cards in the list that dont match the filter
   List<Flashcard> _filteredCards;
   /// A map of the tags to their corresponding cards
-  final Map<String, List<Flashcard>> _tagMap;
+  final Map<FlashcardTag, List<Flashcard>> _tagMap;
   /// A tag filter
-  String _filter;
-  String get filter => _filter;
+  FlashcardTagFilter _filter;
+  String get filterStr => _filter.filterStr;
 
   /// A singleton instance of a card list, used as an unfiltered list of all
   /// cards
@@ -23,7 +24,7 @@ class CardList {
     : _cards = [],
       _filteredCards = [],
       _tagMap = {},
-      _filter = ''
+      _filter = FlashcardTagFilter(filter: null)
     {
     // For every card in the passed list, add it to this list
     for (Flashcard c in cards) {
@@ -38,17 +39,17 @@ class CardList {
   }
 
   /// Returns a list of all available tags
-  List<String> getTags() {
+  List<FlashcardTag> getTags() {
     return _tagMap.keys.toList();
   }
 
   /// Returns a list of filtered tags
-  List<String> getFilteredTags() {
-    List<String> tags = [];
+  List<FlashcardTag> getFilteredTags() {
+    List<FlashcardTag> tags = [];
     for (Flashcard c in _filteredCards) {
-      for (String t in c.tags) {
+      for (FlashcardTag t in c.tags) {
         if (tags.contains(t)) continue;
-        if (t.startsWith(_filter)) tags.add(t);
+        if (_filter.passedFilter(t)) tags.add(t);
       }
     }
     return tags;
@@ -57,16 +58,10 @@ class CardList {
   /// Returns a list of all possible next-level tags in the filtering hierarchy
   List<String> getFilteredNextTags() {
     List<String> nextTags = [];
-    List<String> filteredTags = getFilteredTags();
-    int fl = _filter.length;
-    for (String ft in filteredTags) {
-      String nt = ft.substring(fl);
-      if (nt.startsWith('/')) nt = nt.substring(1);
-      if (nt.contains('/')) {
-        nt = nt.substring(0, nt.indexOf('/'));
-      }
-      if (nextTags.contains(nt) || nt.isEmpty) continue;
-      nextTags.add(nt);
+    List<FlashcardTag> filteredTags = getFilteredTags();
+    for (FlashcardTag ft in filteredTags) {
+      String? nt = _filter.getNextSubtagStr(ft);
+      if (nt != null && !nextTags.contains(nt)) nextTags.add(nt);
     }
     return nextTags;
   }
@@ -87,7 +82,7 @@ class CardList {
     // Add the card to the card list
     _cards.add(card);
     // Associate the card with all its tags in the tag map
-    for (String t in card.tags) {
+    for (FlashcardTag t in card.tags) {
       // If the tag exists, add the card to that tag
       if (_tagMap.containsKey(t)) {
         _tagMap[t]!.add(card);
@@ -98,7 +93,7 @@ class CardList {
       }
     }
     // TODO replace with more efficient system
-    filterList(_filter);
+    filterList();
   }
 
   /// Add multiple cards to the list
@@ -117,7 +112,7 @@ class CardList {
     // Remove from filtered cards
     if (_filteredCards.contains(card)) _filteredCards.remove(card);
     // Remove from associated tags
-    for (String t in card.tags) {
+    for (FlashcardTag t in card.tags) {
       // Remove the card from a tag
       _tagMap[t]!.remove(card);
       // If there are no more cards with that tag, remove the tag
@@ -139,15 +134,14 @@ class CardList {
   }
 
   /// Filters the list by a list of tags and return the new filtered list
-  CardList filterList(String tag) {
-    _filter = tag;
+  CardList filterList() {
     _filteredCards = [];
     // For every tag in the filter list, if these is a tag in this list that
     // starts with the filter tag, add all the cards from that filter tag to
     // the new list
-    for (String lt in _tagMap.keys) {
+    for (FlashcardTag lt in _tagMap.keys) {
       // For every matching card, add it to the new list
-      if (lt.startsWith(_filter)) {
+      if (_filter.passedFilter(lt)) {
         for (Flashcard c in _tagMap[lt]!) {
           if (!_filteredCards.contains(c)) _filteredCards.add(c);
         }
@@ -158,19 +152,14 @@ class CardList {
 
   /// Adds a new filtering level by appending a tag to the current filter string.
   void pushFilter(String next) {
-    if (_filter.isEmpty) {
-      filterList(next);
-    } else {
-      filterList('$_filter/$next');
-    }
+    _filter.pushSubtag(next);
+    filterList();
   }
 
   /// Removes the last level of filtering from the current filter
   void popFilter() {
-    List<String> stack = _filter.split('/');
-    stack.removeLast();
-    _filter = stack.join('/');
-    filterList(_filter);
+    _filter.popSubtag();
+    filterList();
   }
 
   /// Gets a card with the matching term. Throws an [Exception] if the card is

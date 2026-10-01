@@ -35,10 +35,10 @@ class _HomePageState extends State<HomePage> {
         onPressed: () => setState(() => list.popFilter() ),
         icon: Icon(Icons.arrow_upward_rounded))
     ];
-    if (list.filter.isNotEmpty) {
+    if (list.filterStr.isNotEmpty) {
       tagButtons.add(Padding(
         padding: EdgeInsetsGeometry.all(1),
-        child: TextButton(child: Text('[${list.filter}]'),
+        child: TextButton(child: Text('[${list.filterStr}]'),
         onPressed: () => setState(() {
           // list = list.filterList(t);
           // tags = list.getFilteredTags();
@@ -46,7 +46,6 @@ class _HomePageState extends State<HomePage> {
       ));
     }
     for (String t in tags) {
-      if (t == list.filter) continue;
       tagButtons.add(Padding(
         padding: EdgeInsetsGeometry.all(1),
         child: TextButton(child: Text(t),

@@ -10,10 +10,10 @@
 class FlashcardTag {
 
   /// The prefix for the tags, this is used mostly in display.
-  static final String _prefix = '#';
+  static final String prefix = '#';
 
   /// The separator separates different levels of the tag.
-  static final String _separator = '/';
+  static final String separator = '/';
 
   static final RegExp _validRegEx = RegExp(r'[A-Z0-9/]+');
 
@@ -22,28 +22,29 @@ class FlashcardTag {
     // Remove invalid characters
     tagStr.replaceAll(_validRegEx, '');
     // Remove starting `/` as first char
-    while (tagStr.startsWith(_separator)) {
-      tagStr.replaceFirst(_separator, '');
+    while (tagStr.startsWith(separator)) {
+      tagStr.replaceFirst(separator, '');
     }
     // Ensure tag string is NOT empty
     if (tagStr.isEmpty) throw Exception('Tag String is EMPTY');
     // Ensure tags start with `#`
-    if (!tagStr.startsWith(_prefix)) {
-      tagStr = _prefix + tagStr;
+    if (!tagStr.startsWith(prefix)) {
+      tagStr = prefix + tagStr;
     }
     // Remove trailing `/`
-    while (tagStr.endsWith(_separator)) {
+    while (tagStr.endsWith(separator)) {
       tagStr = tagStr.substring(0, tagStr.length - 1);
     }
     // Remove double `//`
-    while (tagStr.contains(_separator + _separator)) {
-      tagStr.replaceAll(_separator + _separator, _separator);
+    while (tagStr.contains(separator + separator)) {
+      tagStr.replaceAll(separator + separator, separator);
     }
     return tagStr;
   }
 
   /// The string representation of the tag.
   final String _tagStr;
+  String get tagStr => _tagStr;
 
   /// Constructor.
   FlashcardTag({required String tagStr}) : _tagStr = _validateTag(tagStr);
@@ -51,21 +52,7 @@ class FlashcardTag {
   /// Checks if the provided tag is a prefix of this tag.
   bool hasPrefix(FlashcardTag tag) {
     return tag._tagStr == _tagStr ||
-      _tagStr.startsWith(tag._tagStr + _separator);
-  }
-
-  /// Returns a new tag with the last subtag popped.
-  FlashcardTag? popSubtag() {
-    if (!_tagStr.contains(_separator)) return null;
-    List<String> tagBits = _tagStr.split(_separator);
-    tagBits.removeLast();
-    FlashcardTag tag = FlashcardTag(tagStr: tagBits.join(_separator));
-    return tag;
-  }
-
-  /// Returns a new tag with the new subtag added.
-  FlashcardTag pushSubtag(String subtagStr) {
-    return FlashcardTag(tagStr: _tagStr + _separator + subtagStr);
+      _tagStr.startsWith(tag._tagStr + separator);
   }
 
   @override
@@ -80,7 +67,51 @@ class FlashcardTag {
 }
 
 class FlashcardTagFilter {
+  /// The internal tag for the filter
   FlashcardTag? _filter;
+  /// Returns the tag string or empty string for the filter
+  String get filterStr => _filter == null? '' : _filter!.tagStr;
+
   FlashcardTagFilter({required FlashcardTag? filter}) : _filter = filter;
-  // TODO
+
+  /// Checks if the provided tag passes the filter condition. Returns true if no
+  /// filter is set or if the tag has the same prefix as the filter.
+  bool passedFilter(FlashcardTag tag) {
+    if (_filter == null) return true;
+    return tag.hasPrefix(_filter!);
+  }
+
+  /// Update the filter by pop ing the last subtag
+  void popSubtag() {
+    if (_filter == null) return;
+    String tagStr = _filter!.tagStr;
+    if (!tagStr.contains(FlashcardTag.separator)) {
+      _filter = null;
+    } else {
+      List<String> tagBits = tagStr.split(FlashcardTag.separator);
+      tagBits.removeLast();
+      FlashcardTag tag = FlashcardTag(tagStr: tagBits.join(FlashcardTag.separator));
+      _filter = tag;
+    }
+  }
+
+  /// Updates the internal filter state by appending the provided subtag string.
+  void pushSubtag(String subtagStr) {
+    if (_filter == null) {
+      _filter = FlashcardTag(tagStr: subtagStr);
+    } else {
+      String tagStr = _filter!.tagStr;
+      _filter = FlashcardTag(tagStr: tagStr + FlashcardTag.separator + subtagStr);
+    }
+  }
+
+  /// Get the next subtag after the filter, or return null.
+  String? getNextSubtagStr(FlashcardTag tag) {
+    if (!passedFilter(tag)) return null;
+    String tmpStr = tag.tagStr;
+    tmpStr = tmpStr.substring((_filter == null? 0 : _filter!.tagStr.length));
+    if (tmpStr.isEmpty) return null;
+    if (tmpStr.startsWith(FlashcardTag.separator)) tmpStr = tmpStr.substring(1);
+    return tmpStr.split(FlashcardTag.separator).first;
+  }
 }

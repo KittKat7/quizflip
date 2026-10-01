@@ -4,14 +4,15 @@
 // | a    | b          | #a #d
 
 import 'package:kittkatflutterlibrary/lang/kkfl_lang.dart';
+import 'flashcard_tag.dart';
 
 /// A flashcard
 class Flashcard {
 
-  static final Flashcard example1 = Flashcard(term: getLang('txtHelpCard1t'), definition: getLang('txtHelpCard1d'), tags: ["#qf-example"]);
-  static final Flashcard example2 = Flashcard(term: getLang('txtHelpCard2t'), definition: getLang('txtHelpCard2d'), tags: ["#qf-example"]);
-  static final Flashcard example3 = Flashcard(term: getLang('txtHelpCard3t'), definition: getLang('txtHelpCard3d'), tags: ["#qf-example"]);
-  static final Flashcard example4 = Flashcard(term: getLang('txtHelpCard4t'), definition: getLang('txtHelpCard4d'), tags: ["#qf-example"]);
+  static final Flashcard example1 = Flashcard(term: getLang('txtHelpCard1t'), definition: getLang('txtHelpCard1d'), tags: [FlashcardTag(tagStr: '#qf-example')]);
+  static final Flashcard example2 = Flashcard(term: getLang('txtHelpCard2t'), definition: getLang('txtHelpCard2d'), tags: [FlashcardTag(tagStr: '#qf-example')]);
+  static final Flashcard example3 = Flashcard(term: getLang('txtHelpCard3t'), definition: getLang('txtHelpCard3d'), tags: [FlashcardTag(tagStr: '#qf-example')]);
+  static final Flashcard example4 = Flashcard(term: getLang('txtHelpCard4t'), definition: getLang('txtHelpCard4d'), tags: [FlashcardTag(tagStr: '#qf-example')]);
   static final List<Flashcard> exampleList = [
     example1,
     example2,
@@ -24,7 +25,7 @@ class Flashcard {
   /// The definition for the card
   String definition;
   /// The tags that apply to the card
-  List<String> tags;
+  List<FlashcardTag> tags;
 
   /// Constructor
   Flashcard({required this.term, required this.definition, required this.tags});
@@ -32,8 +33,8 @@ class Flashcard {
   /// Get the tabs as a space separated string
   String getTagsString() {
     String ts = '';
-    for (String t in tags) {
-      ts += '$t ';
+    for (FlashcardTag t in tags) {
+      ts += '${t.tagStr} ';
     }
     return ts.trim();
   }
@@ -47,7 +48,7 @@ class Flashcard {
     // Set up card fields
     String term = csv[0];
     String definition = csv[1];
-    List<String> tags = [];
+    List<FlashcardTag> tags = [];
 
     // Format tags
     String tagsStr = csv[2].toLowerCase();
@@ -62,7 +63,7 @@ class Flashcard {
       t = t.trim();
       if (t.isEmpty) continue;
       t = '#$t';
-      if (!tags.contains(t)) tags.add(t);
+      if (!tags.contains(t)) tags.add(FlashcardTag(tagStr: t));
     }
 
     // Return the flashcard
