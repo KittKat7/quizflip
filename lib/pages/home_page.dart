@@ -81,7 +81,9 @@ class _HomePageState extends State<HomePage> {
       }, // TODO
       child: Text(getLang('btnImport'))));
     var exportButton = Expanded(child: ElevatedButton(
-      onPressed: (){}, // TODO
+      onPressed: (){
+        exportToCSV();
+      }, // TODO
       child: Text(getLang('btnExport'))));
     var addCardButton = Expanded(child: ElevatedButton(
       onPressed: (){},

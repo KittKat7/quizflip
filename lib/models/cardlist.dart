@@ -8,7 +8,7 @@ class CardList {
   final List<Flashcard> _cards;
   /// The cards in the list that dont match the filter
   List<Flashcard> _filteredCards;
-  /// A map of the tags to their corosponding cards
+  /// A map of the tags to their corresponding cards
   final Map<String, List<Flashcard>> _tagMap;
   /// A tag filter
   String _filter;
