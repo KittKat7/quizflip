@@ -1,33 +1,39 @@
-const CACHE = 'quizflip-v2';
+const CACHE_NAME = 'quizflip-v20261002T2303';
 
 self.addEventListener('install', event => {
-  self.skipWaiting();
-});
-
-self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys
-          .filter(key => key.startsWith('quizflip-') && key !== CACHE)
-          .map(key => caches.delete(key))
-      )
-    ).then(() => self.clients.claim())
+    caches.open(CACHE_NAME).then(cache =>
+      cache.addAll([
+        './',
+        './index.html',
+        './flutter_bootstrap.js',
+        './flutter.js',
+        './main.dart.js',
+      ])
+    )
   );
 });
 
 self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET') return;
+  if (event.request.method !== 'GET') {
+    return;
+  }
 
   event.respondWith(
     caches.match(event.request).then(cached => {
-      return cached || fetch(event.request).then(response => {
+      if (cached) {
+        return cached;
+      }
+
+      return fetch(event.request).then(response => {
         if (response.ok) {
           const copy = response.clone();
-          caches.open(CACHE).then(cache => {
+
+          caches.open(CACHE_NAME).then(cache => {
             cache.put(event.request, copy);
           });
         }
+
         return response;
       });
     })
