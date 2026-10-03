@@ -34,14 +34,25 @@
 </head>
 <body>
   <!-- Script added to allow offline canvaskit use? -->
-  <script>
-    {{flutter_bootstrap_js}}
+  <!-- <script>
+    {{flutter_js}}
+    {{flutter_build_config}}
+
     _flutter.loader.load({
-      config: {
-        canvasKitBaseUrl: "/canvaskit/"
+      onEntrypointLoaded: async function (engineInitializer) {
+        let appRunner = await engineInitializer.initializeEngine({
+          // JsFlutterConfiguration goes here...
+          canvasKitBaseUrl: "/canvaskit/",
+        });
+        appRunner.runApp();
       },
     });
+  </script> -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service_worker.js');
+    }
   </script>
-  <!-- <script src="flutter_bootstrap.js" async></script> -->
+  <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
