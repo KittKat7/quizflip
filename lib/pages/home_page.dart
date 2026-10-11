@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:kittkatflutterlibrary/kittkatflutterlibrary.dart';
 import 'package:quizflip/models/fileio.dart';
 import 'package:quizflip/widgets/confirm_popup.dart';
+import 'package:quizflip/widgets/edit_card_popup.dart';
+import 'package:quizflip/widgets/info_popup.dart';
+import 'package:quizflip/widgets/loading_popup.dart';
 import '../models/flashcard.dart';
 import '/pages/review_page.dart';
 import '/widgets/card_widget.dart';
@@ -33,7 +36,7 @@ class _HomePageState extends State<HomePage> {
     List<Widget> tagButtons = [
       IconButton(
         onPressed: () => setState(() => list.popFilter() ),
-        icon: Icon(Icons.arrow_upward_rounded))
+        icon: Icon(list.filterStr.isEmpty? Icons.horizontal_rule_rounded : Icons.arrow_upward_rounded))
     ];
     if (list.filterStr.isNotEmpty) {
       tagButtons.add(Padding(
@@ -73,25 +76,46 @@ class _HomePageState extends State<HomePage> {
             CardList.getMaster().removeFilteredCards()),
         ),
       child: Text(getLang('btnDeleteAll'))));
+
+    // Import button
     var importButton = Expanded(child: ElevatedButton(
       onPressed: () {
-        importFromCSV().then(
-          (v) => setState((){}));
+        showLoadingPopup(context);
+        importFromCSV().then((v) {
+          // Update displayed cards
+          setState((){});
+          // Pop the loading popup
+          Navigator.pop(context);
+          // Show a popup with info about the import
+          showInfoPopup(
+            context,
+            getLang('hdrImportedInfo'),
+            v.isEmpty? getLang('msgImportCancelled') : getLang('msgImportInfo', v),
+          );
+        });
       },
       child: Text(getLang('btnImport'))));
+    
+    // Export button
     var exportButton = Expanded(child: ElevatedButton(
       onPressed: (){
         exportToCSV();
       },
       child: Text(getLang('btnExport'))));
+
+    // Add card button
     var addCardButton = Expanded(child: ElevatedButton(
-      onPressed: (){},
+      onPressed: () => showEditCardPopup(context, null),
       child: Text(getLang('btnAddCard'))));
+    
+    // Review (reverse) button
     var weiverButton = Expanded(child: ElevatedButton(
       onPressed: () => Navigator.push(
         context,
         genRoute(ReviewPage(list: list, weiver: true,))),
       child: Text(getLang('btnWeiver'))));
+
+    // Review button
     var reviewButton = Expanded(child: ElevatedButton(
       onPressed: () => Navigator.push(
         context,

@@ -76,9 +76,9 @@ class CardList {
   }
 
   /// Add [card] to the list
-  void addCard(Flashcard card) {
+  bool addCard(Flashcard card) {
     // If the card is already added, dont add it again
-    if (_cards.contains(card)) return;
+    if (_cards.contains(card)) return false;
     // Add the card to the card list
     _cards.add(card);
     // Associate the card with all its tags in the tag map
@@ -94,6 +94,7 @@ class CardList {
     }
     // TODO replace with more efficient system
     filterList();
+    return true;
   }
 
   /// Add multiple cards to the list
@@ -121,6 +122,9 @@ class CardList {
       }
     }
   }
+
+  /// Returns true of the list already contains the card.
+  bool containsCard(Flashcard card) => _cards.contains(card);
 
   /// Removes all cards in the filtered list
   void removeFilteredCards() {

@@ -64,8 +64,9 @@ Future<void> saveFlashcards(List<Flashcard> cards) async {
 
 /// Imports flashcards from a CSV file selected by the user. Opens a file picker
 /// to allow the user to select a .csv file, reads the file contents, parses it
-/// into flashcards, and saves them to storage.
-Future<void> importFromCSV() async {
+/// into flashcards, and saves them to storage. Returns [imported, duplicates,
+/// total]
+Future<List<int>> importFromCSV() async {
   FilePickerResult? result = await FilePicker.platform.pickFiles(
     type: FileType.custom,
     allowedExtensions: ['csv'],
@@ -77,12 +78,18 @@ Future<void> importFromCSV() async {
     Uint8List fileBytes = result.files.first.bytes!;
     fileString = String.fromCharCodes(fileBytes);
   } else {
-    print("import cancelled");
-    return;
+    return [];
   }
 
-  CardList.getMaster().addCards(parseFromCSV(fileString));
+  List<Flashcard> cards = parseFromCSV(fileString);
+  int count = 0;
+  int duplicates = 0;
+  for (Flashcard c in cards) {
+    if (CardList.getMaster().addCard(c) == true) count ++;
+    else if (CardList.getMaster().containsCard(c)) duplicates ++;
+  }
   await saveFlashcards(CardList.getMaster().getAllCards());
+  return [count, duplicates, cards.length];
 }
 
 /// Exports flashcards to a CSV file and downloads it to the user's device.
