@@ -114,6 +114,15 @@ self.addEventListener('fetch', event => {
         }
 
         return response;
+      }).catch(error => {
+        // Network error occurred, try to return cached version
+        return caches.match(event.request).then(cached => {
+          if (cached) {
+            return cached;
+          }
+          // If nothing is cached, re-throw the error
+          throw error;
+        });
       });
     })
   );
