@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -27,17 +28,46 @@
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="favicon.png" />
 
   <title>quizflip</title>
   <link rel="manifest" href="manifest.json">
 </head>
+
 <body>
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service_worker.js');
+      navigator.serviceWorker.register('service_worker.js')
+        .then(async (registration) => {
+          await navigator.serviceWorker.ready;
+
+          function checkVersion() {
+            const worker = navigator.serviceWorker.controller ||
+              registration.active;
+
+            if (worker) {
+              worker.postMessage({ type: 'CHECK_VERSION' });
+            }
+          }
+
+          // Check when the page loads.
+          checkVersion();
+
+          // Also check when a newly installed worker takes control.
+          navigator.serviceWorker.addEventListener(
+            'controllerchange',
+            checkVersion,
+            { once: true }
+          );
+        })
+        .catch((error) => {
+          console.error('Service worker registration failed:', error);
+        });
     }
   </script>
+
   <script src="flutter_bootstrap.js" async></script>
+
 </body>
+
 </html>
