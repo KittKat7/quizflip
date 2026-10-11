@@ -1,16 +1,40 @@
-const CACHE_NAME = 'quizflip-v20261002T2303';
+let CACHE_NAME = 'quizflip-default'; // fallback
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache =>
-      cache.addAll([
-        './',
-        './index.html',
-        './flutter_bootstrap.js',
-        './flutter.js',
-        './main.dart.js',
-      ])
-    )
+    // First, fetch version.json to get the version
+    fetch('./version.json')
+      .then(response => response.json())
+      .then(config => {
+        // Set cache name from version
+        CACHE_NAME = `quizflip-v${config.version}`;
+        console.log(`Service Worker: Using cache ${CACHE_NAME}`);
+        
+        // Now open the cache and add files
+        return caches.open(CACHE_NAME).then(cache =>
+          cache.addAll([
+            './',
+            './index.html',
+            './flutter_bootstrap.js',
+            './flutter.js',
+            './main.dart.js',
+            './version.json' // Cache this too!
+          ])
+        );
+      })
+      .catch(error => {
+        console.error('Failed to load version.json:', error);
+        // Fallback: use default CACHE_NAME
+        return caches.open(CACHE_NAME).then(cache =>
+          cache.addAll([
+            './',
+            './index.html',
+            './flutter_bootstrap.js',
+            './flutter.js',
+            './main.dart.js',
+          ])
+        );
+      })
   );
 });
 
