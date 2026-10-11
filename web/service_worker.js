@@ -11,7 +11,9 @@ const STATIC_ASSETS = [
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache =>
-      cache.addAll(STATIC_ASSETS)
+      cache.addAll(STATIC_ASSETS).catch(() => {
+        // Continue even if some assets fail to install
+      })
     )
   );
   self.skipWaiting();
@@ -29,10 +31,15 @@ self.addEventListener('activate', event => {
 async function checkForUpdates() {
   try {
     // Try to fetch version.json from the network
-    const response = await fetch('/version.json', { cache: 'no-store' });
+    const response = await fetch('/version.json', { 
+      cache: 'no-store',
+      method: 'GET'
+    }).catch(err => {
+      throw new Error('Network error: ' + err.message);
+    });
     
     if (!response.ok) {
-      throw new Error('Failed to fetch version.json');
+      throw new Error('Failed to fetch version.json: ' + response.status);
     }
 
     const onlineVersion = await response.json();
@@ -43,20 +50,22 @@ async function checkForUpdates() {
     let cachedVersion = null;
     
     if (cachedResponse) {
-      cachedVersion = await cachedResponse.json();
+      try {
+        cachedVersion = await cachedResponse.json();
+      } catch (e) {
+        cachedVersion = null;
+      }
     }
 
     // If this is the first install or online version is newer, update cache
     if (!cachedVersion || isNewerVersion(onlineVersion.version, cachedVersion.version)) {
-      await cache.put('/version.json', response.clone());
-      
-      // Attempt to update other static assets
-      await cache.addAll(STATIC_ASSETS).catch(() => {
-        // Continue even if some assets fail to update
-      });
-      
-      const previousVersion = cachedVersion ? cachedVersion.version : 'none';
-      console.log(`QuizFlip App: Updated from version ${previousVersion} to ${onlineVersion.version}`);
+      try {
+        await cache.put('/version.json', response.clone());
+        const previousVersion = cachedVersion ? cachedVersion.version : 'none';
+        console.log(`QuizFlip App: Updated from version ${previousVersion} to ${onlineVersion.version}`);
+      } catch (e) {
+        console.error('Failed to update cache:', e);
+      }
     } else {
       console.log(`QuizFlip App: Using cached version ${cachedVersion.version}`);
     }
@@ -110,6 +119,8 @@ self.addEventListener('fetch', event => {
 
           caches.open(CACHE_NAME).then(cache => {
             cache.put(event.request, copy);
+          }).catch(err => {
+            console.error('Cache put failed:', err);
           });
         }
 
@@ -120,10 +131,16 @@ self.addEventListener('fetch', event => {
           if (cached) {
             return cached;
           }
-          // If nothing is cached, re-throw the error
-          throw error;
+          // Return a network error response
+          return new Response('Network error', {
+            status: 503,
+            statusText: 'Service Unavailable'
+          });
         });
       });
+    }).catch(err => {
+      console.error('Cache match failed:', err);
+      return new Response('Service Worker Error', { status: 500 });
     })
   );
 });
