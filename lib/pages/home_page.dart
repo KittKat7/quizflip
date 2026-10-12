@@ -13,7 +13,8 @@ import '/widgets/card_widget.dart';
 import '../models/cardlist.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String version;
+  const HomePage({super.key, required this.version});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -125,7 +126,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(getLang('titleApp')),
+        title: Text(getLang('hdrTitleApp', [widget.version])),
       ),
       body: Aspect(
         child: SingleChildScrollView(child: Column(

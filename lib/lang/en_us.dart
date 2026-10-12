@@ -5,6 +5,7 @@ const Map<String, String> en_us = {
 
   'hdrLoading': 'Loading',
   'hdrImportedInfo': 'Imported Flashcards',
+  'hdrTitleApp': 'QuizFlip \${0}',
 
   'btnReview' : 'Review',
   'btnWeiver' : 'Review (R)',

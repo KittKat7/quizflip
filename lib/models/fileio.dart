@@ -10,6 +10,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '/models/flashcard.dart';
 import 'cardlist.dart';
 
+final csv = CsvCodec(autoDetect: false);
+
 late final SharedPreferences prefs;
 
 /// Initializes the shared preferences instance with a unique prefix.
