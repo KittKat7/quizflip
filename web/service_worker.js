@@ -21,6 +21,23 @@ async function fetchAndCache(cache, request) {
   return response;
 }
 
+// Compare two semantic versions (e.g., "0.1.5" vs "0.1.4").
+// Returns true if newVersion is greater than oldVersion.
+function isNewerVersion(newVersion, oldVersion) {
+  const newParts = newVersion.split('.').map(Number);
+  const oldParts = oldVersion.split('.').map(Number);
+
+  for (let i = 0; i < Math.max(newParts.length, oldParts.length); i++) {
+    const newPart = newParts[i] || 0;
+    const oldPart = oldParts[i] || 0;
+
+    if (newPart > oldPart) return true;
+    if (newPart < oldPart) return false;
+  }
+
+  return false;
+}
+
 // Read the version from the network, falling back to the cache.
 async function getAppVersion(cache) {
   try {
@@ -125,41 +142,19 @@ async function checkVersionAndUpdate() {
   if (
     currentVersion !== 'unknown' &&
     previousVersion !== null &&
-    currentVersion !== previousVersion
+    isNewerVersion(currentVersion, previousVersion)
   ) {
     console.log(
-      `App version changed from ${previousVersion} to ${currentVersion}.`
+      `App version changed from ${previousVersion} to ${currentVersion}. Updating all files...`
     );
 
-    // Refresh the application resources that have already been cached.
-    await refreshCachedResources(cache);
+    // Delete the entire cache and re-download all files.
+    await caches.delete(CACHE_NAME);
+    const newCache = await caches.open(CACHE_NAME);
+    await newCache.addAll(APP_FILES);
+
+    console.log('All files have been updated.');
   }
-}
-
-// Refresh previously cached files from the server.
-async function refreshCachedResources(cache) {
-  const requests = await cache.keys();
-
-  await Promise.all(
-    requests.map(async request => {
-      // Do not refresh version.json here; it has already been updated.
-      if (new URL(request.url).pathname.endsWith('/version.json')) {
-        return;
-      }
-
-      try {
-        const response = await fetch(
-          new Request(request, { cache: 'no-store' })
-        );
-
-        if (response.ok) {
-          await cache.put(request, response);
-        }
-      } catch (_) {
-        // Preserve the existing cached resource when offline.
-      }
-    })
-  );
 }
 
 self.addEventListener('fetch', event => {
