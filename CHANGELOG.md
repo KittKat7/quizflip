@@ -1,3 +1,4 @@
+20261011 2122 0.1.12- =^^=
 20261011 2104 0.1.11- Fixed some popups, OMG I hate the service worker and AI SUCKS, and, for some reason the CSV library didn't work as expected.
 20261002 2249 0.1.5 - Thanks flutter for removing service workers and breaking s... stuff.
 20261002 2114 0.1.4 - Allow canvaskit access when in offline mode? Added new icon.
